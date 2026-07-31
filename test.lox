@@ -1,0 +1,7 @@
+var test=3;
+
+if(test<5){
+  print "test";
+} else {
+  print "test2";
+}
