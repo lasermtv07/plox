@@ -2,15 +2,20 @@ from expr import *
 from lexer import TokenType,Token
 import error as err
 
-class ParseError:
-    def __init__(self):
-        pass
+class ParseError(Exception):
+    pass
 
 class Parser:
     def __init__(self,tokens):
         self.tokens=tokens
         self.current=0
-    
+
+    def parse(self):
+        try:
+            return self.expression()
+        except(ParseError):
+            return None
+
     #utility functions
     def isAtEnd(self):
         return self.peek().type==-1
@@ -100,6 +105,8 @@ class Parser:
             expr=self.expression()
             self.consume(TokenType.RIGHT_PAREN,"Expect ')' after expression")
             return Grouping(expr)
+        
+        raise self.error(self.peek(),"Exprect expression")
 
     def error(self,token:Token,message):
         err.error(token,message)
@@ -108,6 +115,17 @@ class Parser:
     def consume(self,type:TokenType,message):
         if self.check(type): return self.advance()
         
-        self.error(self.peek(),message)
+        raise self.error(self.peek(),message)
 
-        # TODO:finish
+    def synchronize(self):
+        self.advance()
+
+        while not self.isAtEnd():
+            if self.previous().type==TokenType.SEMICOLON:
+                return
+            
+            match self.peek():
+                case TokenType.CLASS | TokenType.FUN | TokenType.VAR | TokenType.FOR | TokenType. IF | TokenType.WHILE | TokenType.PRINT | TokenType.RETURN:
+                    return
+            
+            self.advance()

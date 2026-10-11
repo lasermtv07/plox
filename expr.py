@@ -1,4 +1,4 @@
-
+# TODO: fix this weird shit
 class Visitor():
     def visitBinary():
         pass

@@ -1,5 +1,11 @@
+import lexer
+
 def error(line, message):
-    report(line,"",message)
+    if type(line)==int:
+        report(line,"",message)
+    else:
+        token=line
+        report(token.line," at '"+token.lexeme+"'",message)
 
 def report(line, where,message):
     global hadError

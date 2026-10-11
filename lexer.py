@@ -194,6 +194,7 @@ class Lexer:
         self.tokens.append(Token(TokenType.EOF,"",None,self.line))
         return self.tokens
 
+'''
 with open("test.lox") as f:
     str=f.read()
     test=Lexer(str)
@@ -202,3 +203,4 @@ print(test.source)
 test.scanTokens()
 for i in test.tokens:
     print(i.type, i.lexeme, i.literal,type(i.literal))
+'''

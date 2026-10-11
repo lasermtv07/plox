@@ -1,6 +1,8 @@
 #!/usr/bin/python3
 import sys
-from lexer import TokenType,Token,Lexer
+from lexer import TokenType,Lexer
+from parser import Parser,ParseError
+from expr import AstPrinter
 from error import error,report
 
 hadError=False
@@ -25,7 +27,13 @@ def runPrompt():
 
 
 def run(code):
-    print(code)
+    lex=Lexer(code)
+    tokens=lex.scanTokens()
+    parser=Parser(tokens)
+    expr=parser.parse()
+    astPrinter=AstPrinter()
+    print(astPrinter.print(expr))
+
 
 if __name__=="__main__":
     if len(sys.argv)>2:
