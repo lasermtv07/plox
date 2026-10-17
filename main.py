@@ -31,6 +31,7 @@ def run(code):
     tokens=lex.scanTokens()
     parser=Parser(tokens)
     expr=parser.parse()
+   # print(expr,expr.left.__dict__,expr.operator.__dict__,expr.right.__dict__)
     astPrinter=AstPrinter()
     print(astPrinter.print(expr))
 

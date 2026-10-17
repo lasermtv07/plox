@@ -67,7 +67,7 @@ class Parser:
     def term(self):
         expr=self.factor()
 
-        while self.match(TokenType.STAR,TokenType.SLASH):
+        while self.match(TokenType.PLUS,TokenType.MINUS):
             operator=self.previous()
             right=self.factor()
             expr=Binary(expr,operator,right)
@@ -77,7 +77,7 @@ class Parser:
     def factor(self):
         expr=self.unary()
 
-        while self.match(TokenType.PLUS,TokenType.MINUS):
+        while self.match(TokenType.STAR,TokenType.SLASH):
             operator=self.previous()
             right=self.unary()
             expr=Binary(expr,operator,right)

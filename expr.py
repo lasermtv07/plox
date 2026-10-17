@@ -24,7 +24,7 @@ class Binary(Expr):
         self.right=right
     
     def accept(self,visitor:Visitor):
-        visitor.visitBinary()
+        return visitor.visitBinary(self)
 
 
 class Grouping(Expr):
@@ -33,7 +33,7 @@ class Grouping(Expr):
         self.expression=expression
 
     def accept(self,visitor:Visitor):
-        visitor.visitGrouping()
+        return visitor.visitGrouping(self)
 
 class Literal(Expr):
     def __init__(self,value):
@@ -41,7 +41,7 @@ class Literal(Expr):
         self.value=value
 
     def accept(self,visitor:Visitor):
-        visitor.visitLiteral()
+        return visitor.visitLiteral(self)
 
 class Unary(Expr):
     def __init__(self,operator,right):
@@ -50,20 +50,33 @@ class Unary(Expr):
         self.right=right
 
     def accept(self,visitor:Visitor):
-        visitor.visitUnary()
+        return visitor.visitUnary(self)
 
 class AstPrinter(Visitor):
     def print(self,expr):
         return expr.accept(self)
     
+    def parenthesize(self, *args):
+        out="("
+        for i in args:
+            out+=" "
+            if type(i)!=str:
+            #    print(i,dir(i),i.accept(self),self)
+                out+=i.accept(self)
+            else:
+                out+=i
+        out+=")"
+        return out
+    
     def visitBinary(self,expr:Binary):
-        return "("+expr.operator.lexeme+" "+str(expr.left)+" "+str(expr.right)+")"
+        return self.parenthesize(expr.operator.lexeme,expr.left,expr.right)
 
     def visitGrouping(self,expr:Grouping):
-        return "(group "+str(expr.expression)+")"
+        return self.parenthesize("group ",expr.expression)
     
     def visitLiteral(self,expr:Literal):
+        if expr.value==None: return "nil"
         return str(expr.value)
 
     def visitUnary(self,expr:Unary):
-        return "("+expr.operator.lexeme+" "+str(expr.right)
+        return self.parenthesize(expr.operator.lexeme,expr.right)
