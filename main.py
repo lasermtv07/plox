@@ -2,7 +2,7 @@
 import sys
 from lexer import TokenType,Lexer
 from parser import Parser,ParseError
-from expr import AstPrinter
+from expr import AstPrinter,Interpreter
 from error import error,report
 
 hadError=False
@@ -32,8 +32,10 @@ def run(code):
     parser=Parser(tokens)
     expr=parser.parse()
    # print(expr,expr.left.__dict__,expr.operator.__dict__,expr.right.__dict__)
-    astPrinter=AstPrinter()
-    print(astPrinter.print(expr))
+   # astPrinter=AstPrinter()
+    #print(astPrinter.print(expr))
+    interpreter=Interpreter()
+    print(interpreter.evaluate(expr))
 
 
 if __name__=="__main__":

@@ -1,4 +1,5 @@
 # TODO: fix this weird shit
+from lexer import TokenType
 class Visitor():
     def visitBinary():
         pass
@@ -80,3 +81,52 @@ class AstPrinter(Visitor):
 
     def visitUnary(self,expr:Unary):
         return self.parenthesize(expr.operator.lexeme,expr.right)
+
+class Interpreter(Visitor):
+    def evaluate(self,expr):
+        #print(expr.__dict__)
+        return expr.accept(self)
+    
+    def visitLiteral(self,expr:Literal):
+        #print(expr.value)
+        return expr.value
+    
+    def visitGrouping(self,expr:Grouping):
+        return self.evaluate(expr.expression)
+    
+    def visitUnary(self,expr:Unary):
+        right=self.evaluate(expr.right)
+        if(expr.operator.type==TokenType.MINUS):
+            return -float(right)
+        elif(expr.operator.type==TokenType.BANG):
+            return not (False if not right or right==None else True)
+        
+    def visitBinary(self,expr:Binary):
+        left=self.evaluate(expr.left)
+        right=self.evaluate(expr.right)
+        #print('OPERATOR', expr.operator.__dict__)
+        match expr.operator.type:
+            case TokenType.MINUS:
+                return float(left)-float(right)
+            case TokenType.PLUS:
+                #print('PLUS',left,right)
+                if type(left)==float or type(left)==int:
+                    return float(left)+float(right)
+                if type(left)==str:
+                    return str(left)+str(right)
+            case TokenType.SLASH:
+                return float(left)/float(right)
+            case TokenType.STAR:
+                return float(left)*float(right)
+            case TokenType.GREATER:
+                return float(left)>float(right)
+            case TokenType.GREATER_EQUAL:
+                return float(left)>=float(right)
+            case TokenType.LESS:
+                return float(left)<float(right)
+            case TokenType.LESS_EQUAL:
+                return float(left)<=float(right)
+            case TokenType.EQUAL_EQUAL: #be wary, for we doing some funky type casting here
+                return left==right
+            case TokenType.BANG_EQUAL:
+                return left!=right
