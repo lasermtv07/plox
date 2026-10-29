@@ -35,7 +35,8 @@ def run(code):
    # astPrinter=AstPrinter()
     #print(astPrinter.print(expr))
     interpreter=Interpreter()
-    print(interpreter.evaluate(expr))
+    if expr!=None:
+        print(interpreter.interpret(expr))
 
 
 if __name__=="__main__":
