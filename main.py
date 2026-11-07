@@ -2,7 +2,8 @@
 import sys
 from lexer import TokenType,Lexer
 from parser import Parser,ParseError
-from expr import AstPrinter,Interpreter
+from expr import AstPrinter
+from interpret import Interpreter
 from error import error,report
 
 hadError=False

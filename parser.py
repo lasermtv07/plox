@@ -1,4 +1,5 @@
 from expr import *
+from stmt import *
 from lexer import TokenType,Token
 import error as err
 
@@ -11,11 +12,14 @@ class Parser:
         self.current=0
 
     def parse(self):
+        statements=[]
+        while not self.isAtEnd():
+            statements.append(self.statement); '''
         try:
             return self.expression()
         except(ParseError):
             return None
-
+'''
     #utility functions
     def isAtEnd(self):
         return self.peek().type==-1
@@ -40,6 +44,21 @@ class Parser:
                 self.advance()
                 return True
         return False
+    
+    def statement(self):
+        if self.match(TokenType.PRINT):
+            return self.printStatement()
+        return self.expressionStatement()
+
+    def printStatement(self):
+        value=self.expression()
+        self.consume(TokenType.SEMICOLON,"Expect ';' after value.")
+        return Print(value)
+
+    def expressionStatement(self):
+        value=self.expression()
+        self.consume(TokenType.SEMICOLON,"Expect ';' after value.")
+        return Expression(value)
 
     def expression(self):
         return self.equality()
