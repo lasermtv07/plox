@@ -14,7 +14,13 @@ class Parser:
     def parse(self):
         statements=[]
         while not self.isAtEnd():
-            statements.append(self.statement()); '''
+            try:
+                statements.append(self.statement())
+            except:
+                pass
+        
+        return statements
+        '''
         try:
             return self.expression()
         except(ParseError):

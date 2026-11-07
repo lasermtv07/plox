@@ -14,12 +14,12 @@ class RuntimeError(Exception):
 
 
 class Interpreter(Visitor,stmt.Visitor):
-    def interpret(self,expr):
-        try:
-            value=self.evaluate(expr)
-            return value
-        except RuntimeError as e:
-            err.error(e.token.line,e.message)
+    def interpret(self,stmt):
+        for i in stmt:
+            try:
+                self.evaluate(i)
+            except RuntimeError as e:
+                err.error(e.token.line,e.message)
     def evaluate(self,expr):
         #print(expr.__dict__)
         return expr.accept(self)
