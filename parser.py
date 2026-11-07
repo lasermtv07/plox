@@ -14,7 +14,7 @@ class Parser:
     def parse(self):
         statements=[]
         while not self.isAtEnd():
-            statements.append(self.statement); '''
+            statements.append(self.statement()); '''
         try:
             return self.expression()
         except(ParseError):
@@ -22,7 +22,7 @@ class Parser:
 '''
     #utility functions
     def isAtEnd(self):
-        return self.peek().type==-1
+        return self.peek().type==TokenType.EOF
 
     def peek(self) ->Token:
         return self.tokens[self.current]
@@ -51,14 +51,14 @@ class Parser:
         return self.expressionStatement()
 
     def printStatement(self):
-        value=self.expression()
+        expr=self.expression()
         self.consume(TokenType.SEMICOLON,"Expect ';' after value.")
-        return Print(value)
+        return Print(expr)
 
     def expressionStatement(self):
-        value=self.expression()
-        self.consume(TokenType.SEMICOLON,"Expect ';' after value.")
-        return Expression(value)
+        expr=self.expression()
+        self.consume(TokenType.SEMICOLON,"Expect ';' after expression.")
+        return Expression(expr)
 
     def expression(self):
         return self.equality()

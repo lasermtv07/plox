@@ -1,5 +1,6 @@
 from expr import Visitor,Expr, Binary,Grouping,Literal,Unary
 from lexer import TokenType
+from stmt import Print, Expression
 import stmt
 import error as err
 class CastError(Exception):
@@ -85,3 +86,10 @@ class Interpreter(Visitor,stmt.Visitor):
                 return left==right
             case TokenType.BANG_EQUAL:
                 return left!=right
+    
+    def visitExpression(self,expr):
+        self.evaluate(expr)
+
+    def visitPrint(self,expr):
+        out=self.evaluate(expr)
+        print(str(out))
