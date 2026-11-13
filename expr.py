@@ -52,6 +52,11 @@ class Unary(Expr):
     def accept(self,visitor:Visitor):
         return visitor.visitUnary(self)
 
+class Variable(Expr):
+    def __init__(self,name):
+        super().__init__()
+        self.name=name
+
 class AstPrinter(Visitor):
     def print(self,expr):
         return expr.accept(self)

@@ -15,7 +15,7 @@ class Parser:
         statements=[]
         while not self.isAtEnd():
             try:
-                statements.append(self.statement())
+                statements.append(self.declaration())
             except:
                 pass
         
@@ -51,6 +51,24 @@ class Parser:
                 return True
         return False
     
+    def declaration(self):
+        try:
+            if self.match(TokenType.VAR):
+                return self.varDeclaration()
+            return self.statement()
+        except ParseError:
+            self.synchronize()
+            return None
+
+    def varDeclaration(self):
+        name=self.consume(TokenType.IDENTIFIER,"Expect a variable name")
+        initializer=None
+        if self.match(TokenType.EQUAL):
+            initializer=self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect a ';' after variable declaration")
+        return Var(name,initializer)
+
+
     def statement(self):
         if self.match(TokenType.PRINT):
             return self.printStatement()
@@ -122,6 +140,7 @@ class Parser:
         if self.match(TokenType.FALSE): return Literal(False)
         if self.match(TokenType.TRUE): return Literal(True)
         if self.match(TokenType.NIL): return Literal(None)
+        if self.match(TokenType.IDENTIFIER): return Variable(self.previous())
 
         if self.match(TokenType.NUMBER,TokenType.STRING):
             return Literal(self.previous().literal)
